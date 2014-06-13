@@ -178,7 +178,8 @@ steal('jquery', 'jquerypp/lang/vector', 'jquerypp/event/livehack', 'jquerypp/eve
 				this.moved = true;
 			}
 
-			this.element.trigger('move', this);
+			// Only trigger the event if we are not cancelled at this point
+			if (!this._cancelled) this.element.trigger('move', this);
 			var pointer = ev.vector();
 			if ( this._start_position && this._start_position.equals(pointer) ) {
 				return;
