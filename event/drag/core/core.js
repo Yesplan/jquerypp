@@ -19,7 +19,7 @@ steal('jquery', 'jquerypp/lang/vector', 'jquerypp/event/livehack', 'jquerypp/eve
 			window.getSelection().removeAllRanges()
 		} : function(){},
 
-		supportTouch = "ontouchend" in document,
+		supportTouch = !window._phantom && "ontouchend" in document,
 	// Use touch events or map it to mouse events
 		startEvent = supportTouch ? "touchstart" : "mousedown",
 		stopEvent = supportTouch ? "touchend" : "mouseup",
@@ -181,7 +181,7 @@ steal('jquery', 'jquerypp/lang/vector', 'jquerypp/event/livehack', 'jquerypp/eve
 			// Only trigger the event if we are not cancelled at this point
 			if (!this._cancelled) this.element.trigger('move', this);
 			var pointer = ev.vector();
-			if ( this._start_position && this._start_position.equals(pointer) ) {
+			if ( this._start_position && this._start_position.equal(pointer) ) {
 				return;
 			}
 			this.draw(pointer, ev);
