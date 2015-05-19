@@ -1375,13 +1375,13 @@ define('jquerypp/event/drag/core/core', [
                 moved: false,
                 _distance: this.distance,
                 callbacks: {
-                    dragdown: event.find(delegate, ['dragdown'], selector),
-                    draginit: event.find(delegate, ['draginit'], selector),
-                    dragover: event.find(delegate, ['dragover'], selector),
-                    dragmove: event.find(delegate, ['dragmove'], selector),
-                    dragout: event.find(delegate, ['dragout'], selector),
-                    dragend: event.find(delegate, ['dragend'], selector),
-                    dragcleanup: event.find(delegate, ['dragcleanup'], selector)
+                    dragdown_pp: event.find(delegate, ['dragdown_pp'], selector),
+                    draginit_pp: event.find(delegate, ['draginit_pp'], selector),
+                    dragover_pp: event.find(delegate, ['dragover_pp'], selector),
+                    dragmove_pp: event.find(delegate, ['dragmove_pp'], selector),
+                    dragout_pp: event.find(delegate, ['dragout_pp'], selector),
+                    dragend_pp: event.find(delegate, ['dragend_pp'], selector),
+                    dragcleanup_pp: event.find(delegate, ['dragcleanup_pp'], selector)
                 },
                 destroyed: function () {
                     self.current = null;
@@ -1406,7 +1406,7 @@ define('jquerypp/event/drag/core/core', [
             if (supportTouch) {
                 $(document).bind(moveEvent, preventTouchScroll);
             }
-            if (!this.callEvents('down', this.element, ev)) {
+            if (!this.callEvents('down_pp', this.element, ev)) {
                 this.noSelection(this.delegate);
                 clearSelection();
             }
@@ -1434,7 +1434,8 @@ define('jquerypp/event/drag/core/core', [
                 this.init(this.element, ev);
                 this.moved = true;
             }
-            this.element.trigger('move', this);
+            // Only trigger the event if we are not cancelled at this point
+            if (!this._cancelled) this.element.trigger('move', this);
             var pointer = ev.vector();
             if (this._start_position && this._start_position.equal(pointer)) {
                 return;
@@ -1470,7 +1471,7 @@ define('jquerypp/event/drag/core/core', [
             this._cancelled = false;
             this.event = event;
             this.mouseElementPosition = this.mouseStartPosition.minus(this.element.offsetv());
-            this.callEvents('init', element, event);
+            this.callEvents('init_pp', element, event);
             if (this._cancelled === true) {
                 return;
             }
@@ -1533,13 +1534,13 @@ define('jquerypp/event/drag/core/core', [
             }
         },
         move: function (event) {
-            this.callEvents('move', this.element, event);
+            this.callEvents('move_pp', this.element, event);
         },
         over: function (event, drop) {
-            this.callEvents('over', this.element, event, drop);
+            this.callEvents('over_pp', this.element, event, drop);
         },
         out: function (event, drop) {
-            this.callEvents('out', this.element, event, drop);
+            this.callEvents('out_pp', this.element, event, drop);
         },
         end: function (event) {
             if (this._cancelled) {
@@ -1548,7 +1549,7 @@ define('jquerypp/event/drag/core/core', [
             if (!this._only && this.constructor.responder) {
                 this.constructor.responder.end(event, this);
             }
-            this.callEvents('end', this.element, event);
+            this.callEvents('end_pp', this.element, event);
             if (this._revert) {
                 var self = this;
                 this.movingElement.animate({
@@ -1571,7 +1572,7 @@ define('jquerypp/event/drag/core/core', [
                 this.movingElement.remove();
             }
             if (event) {
-                this.callEvents('cleanup', this.element, event);
+                this.callEvents('cleanup_pp', this.element, event);
             }
             this.movingElement = this.element = this.event = null;
         },
@@ -1636,13 +1637,13 @@ define('jquerypp/event/drag/core/core', [
         }
     });
     event.setupHelper([
-        'dragdown',
-        'draginit',
-        'dragover',
-        'dragmove',
-        'dragout',
-        'dragend',
-        'dragcleanup'
+        'dragdown_pp',
+        'draginit_pp',
+        'dragover_pp',
+        'dragmove_pp',
+        'dragout_pp',
+        'dragend_pp',
+        'dragcleanup_pp'
     ], startEvent, function (e) {
         $.Drag.mousedown.call($.Drag, e, this);
     });
@@ -1742,12 +1743,12 @@ define('jquerypp/event/drop/drop', [
 ], function ($) {
     var event = $.event;
     var eventNames = [
-            'dropover',
-            'dropon',
-            'dropout',
-            'dropinit',
-            'dropmove',
-            'dropend'
+            'dropover_pp',
+            'dropon_pp',
+            'dropout_pp',
+            'dropinit_pp',
+            'dropmove_pp',
+            'dropend_pp'
         ];
     $.Drop = function (callbacks, element) {
         $.extend(this, callbacks);
@@ -1776,7 +1777,7 @@ define('jquerypp/event/drop/drop', [
         _rootElements: [],
         _elements: $(),
         last_active: [],
-        endName: 'dropon',
+        endName: 'dropon_pp',
         addElement: function (el) {
             for (var i = 0; i < this._rootElements.length; i++) {
                 if (el == this._rootElements[i])
@@ -1805,14 +1806,14 @@ define('jquerypp/event/drop/drop', [
         },
         deactivate: function (responder, mover, event) {
             mover.out(event, responder);
-            responder.callHandlers(this.lowerName + 'out', responder.element[0], event, mover);
+            responder.callHandlers(this.lowerName + 'out_pp', responder.element[0], event, mover);
         },
         activate: function (responder, mover, event) {
             mover.over(event, responder);
-            responder.callHandlers(this.lowerName + 'over', responder.element[0], event, mover);
+            responder.callHandlers(this.lowerName + 'over_pp', responder.element[0], event, mover);
         },
         move: function (responder, mover, event) {
-            responder.callHandlers(this.lowerName + 'move', responder.element[0], event, mover);
+            responder.callHandlers(this.lowerName + 'move_pp', responder.element[0], event, mover);
         },
         compile: function (event, drag) {
             if (!this.dragging && !drag) {
@@ -1854,7 +1855,7 @@ define('jquerypp/event/drop/drop', [
             var i = 0, drop;
             while (i < newEls.length) {
                 drop = $.data(newEls[i], '_dropData');
-                drop.callHandlers(this.lowerName + 'init', newEls[i], event, drag);
+                drop.callHandlers(this.lowerName + 'init_pp', newEls[i], event, drag);
                 if (drop._canceled) {
                     newEls.splice(i, 1);
                 } else {
@@ -1914,7 +1915,7 @@ define('jquerypp/event/drop/drop', [
             }
         },
         end: function (event, moveable) {
-            var la, endName = this.lowerName + 'end', onEvent = $.Event(this.endName, event), dropData;
+            var la, endName = this.lowerName + 'end_pp', onEvent = $.Event(this.endName, event), dropData;
             for (var i = 0; i < this.last_active.length; i++) {
                 la = this.last_active[i];
                 if (this.isAffected(event.vector(), moveable, la) && la[this.endName]) {
@@ -1985,17 +1986,17 @@ define('jquerypp/event/drag/scroll/scroll', [
         callHandlers: function (method, el, ev, drag) {
             this[method](el || this.element[0], ev, this, drag);
         },
-        dropover: function () {
+        dropover_pp: function () {
         },
-        dropon: function () {
+        dropon_pp: function () {
             this.clear_timeout();
         },
-        dropout: function () {
+        dropout_pp: function () {
             this.clear_timeout();
         },
-        dropinit: function () {
+        dropinit_pp: function () {
         },
-        dropend: function () {
+        dropend_pp: function () {
         },
         clear_timeout: function () {
             if (this.interval) {
@@ -2006,7 +2007,7 @@ define('jquerypp/event/drag/scroll/scroll', [
         distance: function (diff) {
             return (30 - diff) / 2;
         },
-        dropmove: function (el, ev, drop, drag) {
+        dropmove_pp: function (el, ev, drop, drag) {
             this.clear_timeout();
             var mouse = ev.vector(), location_object = $(el == document.documentElement ? window : el), dimensions = location_object.dimensionsv('outer'), position = location_object.offsetv(), bottom = position.y() + dimensions.y() - mouse.y(), top = mouse.y() - position.y(), right = position.x() + dimensions.x() - mouse.x(), left = mouse.x() - position.x(), dx = 0, dy = 0, distance = this.options.distance;
             if (bottom < distance && this.y) {
