@@ -47,7 +47,7 @@ $.fn.within= function(left, top, useOffsetCache) {
 		}
     });
 
-    return this.pushStack( $.unique( ret ), "within", left+","+top );
+    return this.pushStack( $.uniqueSort( ret ), "within", left+","+top );
 }
 
 
@@ -88,7 +88,7 @@ $.fn.withinBox = function(left, top, width, height, useOffsetCache){
         if(res)
             ret.push(this);
     });
-    return this.pushStack( $.unique( ret ), "withinBox", $.makeArray(arguments).join(",") );
+    return this.pushStack( $.uniqueSort( ret ), "withinBox", $.makeArray(arguments).join(",") );
 }
 
 return $;

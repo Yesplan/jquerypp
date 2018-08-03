@@ -10,7 +10,7 @@ steal('jquery', function($) {
 				// don't add window because it can't be compared easily
 				if ( this !== window ) {
 					bound.push(this);
-					$.unique(bound);
+					$.uniqueSort(bound);
 				}
 				// returns false if the window
 				return this !== window;
