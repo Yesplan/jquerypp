@@ -29,7 +29,7 @@
  *     $(".item").live("dragover", function(ev, drag){
  *       // let user know that the item can be dropped
  *       $(this).addClass("canDrop");
- *     }).live("dropover", function(ev, drop, drag){
+ *     }).live("dropover_pp", function(ev, drop, drag){
  *       // let user know that the item can be dropped on
  *       $(this).addClass('drop-able')
  *     })

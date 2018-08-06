@@ -20,10 +20,10 @@ steal('jquery', 'jquerypp/lang/vector', 'jquerypp/event/livehack', 'jquerypp/eve
 		} : function(){},
 
 		supportTouch = !window._phantom && "ontouchend" in document,
-	// Use touch events or map it to mouse events
-		startEvent = supportTouch ? "touchstart" : "mousedown",
-		stopEvent = supportTouch ? "touchend" : "mouseup",
-		moveEvent = supportTouch ? "touchmove" : "mousemove",
+	// Use both touch events and mouse events
+		startEvent = "touchstart mousedown",
+		stopEvent = "touchend mouseup",
+		moveEvent = "touchmove mousemove",
 	// On touchmove events the default (scrolling) event has to be prevented
 		preventTouchScroll = function(ev) {
 			ev.preventDefault();
@@ -37,9 +37,9 @@ steal('jquery', 'jquerypp/lang/vector', 'jquerypp/event/livehack', 'jquerypp/eve
 	 * @test jquerypp/event/drag/qunit.html
 	 *
 	 * The `jQuery.Drag` constructor is never called directly but an instance of `jQuery.Drag` is passed as the second argument
-	 * to the `dragdown`, `draginit`, `dragmove`, `dragend`, `dragover` and `dragout` event handlers:
+	 * to the `dragdown_pp`, `draginit_pp`, `dragmove_pp`, `dragend_pp`, `dragover_pp` and `dragout_pp` event handlers:
 	 *
-	 *      $('#dragger').on('draginit', function(el, drag) {
+	 *      $('#dragger').on('draginit_pp', function(el, drag) {
 	 *          // drag -> $.Drag
 	 *      });
 	 */
@@ -84,13 +84,13 @@ steal('jquery', 'jquerypp/lang/vector', 'jquerypp/event/livehack', 'jquerypp/eve
 				moved: false,
 				_distance: this.distance,
 				callbacks: {
-					dragdown: event.find(delegate, ["dragdown"], selector),
-					draginit: event.find(delegate, ["draginit"], selector),
-					dragover: event.find(delegate, ["dragover"], selector),
-					dragmove: event.find(delegate, ["dragmove"], selector),
-					dragout: event.find(delegate, ["dragout"], selector),
-					dragend: event.find(delegate, ["dragend"], selector),
-					dragcleanup: event.find(delegate, ["dragcleanup"], selector)
+					dragdown_pp: event.find(delegate, ["dragdown_pp"], selector),
+					draginit_pp: event.find(delegate, ["draginit_pp"], selector),
+					dragover_pp: event.find(delegate, ["dragover_pp"], selector),
+					dragmove_pp: event.find(delegate, ["dragmove_pp"], selector),
+					dragout_pp: event.find(delegate, ["dragout_pp"], selector),
+					dragend_pp: event.find(delegate, ["dragend_pp"], selector),
+					dragcleanup_pp: event.find(delegate, ["dragcleanup_pp"], selector)
 				},
 				destroyed: function() {
 					self.current = null;
@@ -126,7 +126,7 @@ steal('jquery', 'jquerypp/lang/vector', 'jquerypp/event/livehack', 'jquerypp/eve
 				$(document).bind(moveEvent, preventTouchScroll);
 			}
 
-			if (!this.callEvents('down', this.element, ev) ) {
+			if (!this.callEvents('down_pp', this.element, ev) ) {
 				this.noSelection(this.delegate);
 				//this is for firefox
 				clearSelection();
@@ -139,7 +139,7 @@ steal('jquery', 'jquerypp/lang/vector', 'jquerypp/event/livehack', 'jquerypp/eve
 		 * @body
 		 * A reference to the element that is being dragged. For example:
 		 *
-		 *      $('.draggable').on('draginit', function(ev, drag) {
+		 *      $('.draggable').on('draginit_pp', function(ev, drag) {
 		 *          drag.element.html('I am the drag element');
 		 *      });
 		 */
@@ -197,11 +197,11 @@ steal('jquery', 'jquerypp/lang/vector', 'jquerypp/event/livehack', 'jquerypp/eve
 
 		/**
 		 * The `drag.noSelection(element)` method turns off text selection during a drag event.
-		 * This method is called by default unless a event is listening to the 'dragdown' event.
+		 * This method is called by default unless a event is listening to the 'dragdown_pp' event.
 		 *
 		 * ## Example
 		 *
-		 *      $('div.drag').bind('dragdown', function(elm,event,drag){
+		 *      $('div.drag').bind('dragdown_pp', function(elm,event,drag){
 		 *          drag.noSelection();
 		 *      });
 		 *
@@ -225,7 +225,7 @@ steal('jquery', 'jquerypp/lang/vector', 'jquerypp/event/livehack', 'jquerypp/eve
 		 *
 		 * ## Example
 		 *
-		 *     $('div.drag').bind('dragdown', function(elm,event,drag){
+		 *     $('div.drag').bind('dragdown_pp', function(elm,event,drag){
 		 *       drag.selection();
 		 *     });
 		 */
@@ -254,7 +254,7 @@ steal('jquery', 'jquerypp/lang/vector', 'jquerypp/event/livehack', 'jquerypp/eve
 			 * The position of start of the cursor on the element
 			 */
 			this.mouseElementPosition = this.mouseStartPosition.minus(this.element.offsetv()); //where the mouse is on the Element
-			this.callEvents('init', element, event);
+			this.callEvents('init_pp', element, event);
 
 			// Check what they have set and respond accordingly if they canceled
 			if ( this._cancelled === true ) {
@@ -303,7 +303,7 @@ steal('jquery', 'jquerypp/lang/vector', 'jquerypp/event/livehack', 'jquerypp/eve
 		currentDelta: function() {
 			return new $.Vector(parseInt(this.movingElement.css('left'), 10) || 0, parseInt(this.movingElement.css('top'), 10) || 0);
 		},
-		//draws the position of the dragmove object
+		//draws the position of the dragmove_pp object
 		draw: function( pointer, event ) {
 			// only drag if we haven't been cancelled;
 			if ( this._cancelled ) {
@@ -317,9 +317,9 @@ steal('jquery', 'jquerypp/lang/vector', 'jquerypp/event/livehack', 'jquerypp/eve
 			 * takes into account the start position of the cursor on the element.
 			 *
 			 * If the drag is going to be moved to an unacceptable location, you can call preventDefault in
-			 * dragmove to prevent it from being moved there.
+			 * dragmove_pp to prevent it from being moved there.
 			 *
-			 *     $('.mover').bind("dragmove", function(ev, drag){
+			 *     $('.mover').bind("dragmove_pp", function(ev, drag){
 			 *       if(drag.location.top() < 100){
 			 *         ev.preventDefault()
 			 *       }
@@ -382,13 +382,13 @@ steal('jquery', 'jquerypp/lang/vector', 'jquerypp/event/livehack', 'jquerypp/eve
 			}
 		},
 		move: function( event ) {
-			this.callEvents('move', this.element, event);
+			this.callEvents('move_pp', this.element, event);
 		},
 		over: function( event, drop ) {
-			this.callEvents('over', this.element, event, drop);
+			this.callEvents('over_pp', this.element, event, drop);
 		},
 		out: function( event, drop ) {
-			this.callEvents('out', this.element, event, drop);
+			this.callEvents('out_pp', this.element, event, drop);
 		},
 		/**
 		 * Called on drag up
@@ -405,7 +405,7 @@ steal('jquery', 'jquerypp/lang/vector', 'jquerypp/event/livehack', 'jquerypp/eve
 				this.constructor.responder.end(event, this);
 			}
 
-			this.callEvents('end', this.element, event);
+			this.callEvents('end_pp', this.element, event);
 
 			if ( this._revert ) {
 				var self = this;
@@ -443,16 +443,16 @@ steal('jquery', 'jquerypp/lang/vector', 'jquerypp/event/livehack', 'jquerypp/eve
 			}
 
 			if(event) {
-				this.callEvents('cleanup', this.element, event);
+				this.callEvents('cleanup_pp', this.element, event);
 			}
 
 			this.movingElement = this.element = this.event = null;
 		},
 		/**
 		 * `drag.cancel()` stops a drag motion from from running.  This also stops any other events from firing, meaning
-		 * that "dragend" will not be called.
+		 * that "dragend_pp" will not be called.
 		 *
-		 *     $("#todos").on(".handle", "draginit", function( ev, drag ) {
+		 *     $("#todos").on(".handle", "draginit_pp", function( ev, drag ) {
 		 *       if(drag.movingElement.hasClass("evil")){
 		 *         drag.cancel();
 		 *       }
@@ -472,9 +472,9 @@ steal('jquery', 'jquerypp/lang/vector', 'jquerypp/event/livehack', 'jquerypp/eve
 		 * `drag.ghost( [parent] )` clones the element and uses it as the
 		 * moving element, leaving the original dragged element in place.  The `parent` option can
 		 * be used to specify where the ghost element should be temporarily added into the
-		 * DOM.  This method should be called in "draginit".
+		 * DOM.  This method should be called in "draginit_pp".
 		 *
-		 *     $("#todos").on(".handle", "draginit", function( ev, drag ) {
+		 *     $("#todos").on(".handle", "draginit_pp", function( ev, drag ) {
 		 *       drag.ghost();
 		 *     })
 		 *
@@ -508,7 +508,7 @@ steal('jquery', 'jquerypp/lang/vector', 'jquerypp/event/livehack', 'jquerypp/eve
 		 * dragging an drag-icon of a todo element, you want to move some other representation of
 		 * the todo element (or elements).  To do this you might:
 		 *
-		 *     $("#todos").on(".handle", "draginit", function( ev, drag ) {
+		 *     $("#todos").on(".handle", "draginit_pp", function( ev, drag ) {
 		 *       // create what we'll drag
 		 *       var rep = $('<div/>').text("todos")
 		 *         .appendTo(document.body)
@@ -543,7 +543,7 @@ steal('jquery', 'jquerypp/lang/vector', 'jquerypp/event/livehack', 'jquerypp/eve
 		 * `drag.revert([val])` makes the [$.Drag::representative representative] element revert back to it
 		 * original position after the drag motion has completed.  The revert is done with an animation.
 		 *
-		 *     $("#todos").on(".handle","dragend",function( ev, drag ) {
+		 *     $("#todos").on(".handle","dragend_pp",function( ev, drag ) {
 		 *       drag.revert();
 		 *     })
 		 *
@@ -557,11 +557,11 @@ steal('jquery', 'jquerypp/lang/vector', 'jquerypp/event/livehack', 'jquerypp/eve
 		/**
 		 * `drag.vertical()` isolates the drag to vertical movement.  For example:
 		 *
-		 *     $("#images").on(".thumbnail","draginit", function(ev, drag){
+		 *     $("#images").on(".thumbnail","draginit_pp", function(ev, drag){
 		 *       drag.vertical();
 		 *     });
 		 *
-		 * Call `vertical()` in "draginit" or "dragdown".
+		 * Call `vertical()` in "draginit_pp" or "dragdown_pp".
 		 *
 		 * @return {drag} the drag object for chaining.
 		 */
@@ -572,11 +572,11 @@ steal('jquery', 'jquerypp/lang/vector', 'jquerypp/event/livehack', 'jquerypp/eve
 		/**
 		 * `drag.horizontal()` isolates the drag to horizontal movement.  For example:
 		 *
-		 *     $("#images").on(".thumbnail","draginit", function(ev, drag){
+		 *     $("#images").on(".thumbnail","draginit_pp", function(ev, drag){
 		 *       drag.horizontal();
 		 *     });
 		 *
-		 * Call `horizontal()` in "draginit" or "dragdown".
+		 * Call `horizontal()` in "draginit_pp" or "dragdown_pp".
 		 *
 		 * @return {drag} the drag object for chaining.
 		 */
@@ -589,7 +589,7 @@ steal('jquery', 'jquerypp/lang/vector', 'jquerypp/event/livehack', 'jquerypp/eve
 		 * not notify drops.  The default value is `false`.  Call it with no arguments or pass it true
 		 * to prevent drop events.
 		 *
-		 *     $("#images").on(".thumbnail","dragdown", function(ev, drag){
+		 *     $("#images").on(".thumbnail","dragdown_pp", function(ev, drag){
 		 * 	     drag.only();
 		 *     });
 		 *
@@ -602,17 +602,17 @@ steal('jquery', 'jquerypp/lang/vector', 'jquerypp/event/livehack', 'jquerypp/eve
 
 		/**
 		 * `distance([val])` sets or reads the distance the mouse must move before a drag motion is started.  This should be set in
-		 * "dragdown" and delays "draginit" being called until the distance is covered.  The distance
+		 * "dragdown_pp" and delays "draginit_pp" being called until the distance is covered.  The distance
 		 * is measured in pixels.  The default distance is 0 pixels meaning the drag motion starts on the first
 		 * mousemove after a mousedown.
 		 *
 		 * Set this to make drag motion a little "stickier" to start.
 		 *
-		 *     $("#images").on(".thumbnail","dragdown", function(ev, drag){
+		 *     $("#images").on(".thumbnail","dragdown_pp", function(ev, drag){
 		 *       drag.distance(10);
 		 *     });
 		 *
-		 * @param {Number} [val] The number of pixels the mouse must move before "draginit" is called.
+		 * @param {Number} [val] The number of pixels the mouse must move before "draginit_pp" is called.
 		 * @return {drag|Number} returns the drag instance for chaining if the drag value is being set or the
 		 * distance value if the distance is being read.
 		 */
@@ -630,17 +630,17 @@ steal('jquery', 'jquerypp/lang/vector', 'jquerypp/event/livehack', 'jquerypp/eve
 	 */
 	event.setupHelper([
 	/**
-	 * @function jQuery.event.special.dragdown dragdown
+	 * @function jQuery.event.special.dragdown dragdown_pp
 	 * @parent jQuery.event.drag
 	 *
 	 * @body
 	 *
-	 * `dragdown` is called when a drag movement has started on a mousedown.
+	 * `dragdown_pp` is called when a drag movement has started on a mousedown.
 	 * The event handler gets an instance of [jQuery.Drag] passed as the second
 	 * parameter.  Listening to `dragdown` allows you to customize
 	 * the behavior of a drag motion, especially when `draginit` should be called.
 	 *
-	 *     $(".handles").delegate("dragdown", function(ev, drag){
+	 *     $(".handles").delegate("dragdown_pp", function(ev, drag){
 	 *       // call draginit only when the mouse has moved 20 px
 	 *       drag.distance(20);
 	 *     })
@@ -655,7 +655,7 @@ steal('jquery', 'jquerypp/lang/vector', 'jquerypp/event/livehack', 'jquerypp/eve
 	 * You might want it if you want to allow text selection on element
 	 * within the drag element.  Typically these are input elements.
 	 *
-	 *     $(".handles").delegate("dragdown", function(ev, drag){
+	 *     $(".handles").delegate("dragdown_pp", function(ev, drag){
 	 *       if(ev.target.nodeName === "input"){
 	 *         drag.cancel();
 	 *       } else {
@@ -663,26 +663,26 @@ steal('jquery', 'jquerypp/lang/vector', 'jquerypp/event/livehack', 'jquerypp/eve
 	 *       }
 	 *     })
 	 */
-		'dragdown',
+		'dragdown_pp',
 	/**
-	 * @function jQuery.event.special.draginit draginit
+	 * @function jQuery.event.special.draginit draginit_pp
 	 * @parent jQuery.event.drag
 	 *
 	 * @body
 	 *
-	 * `draginit` is triggered when the drag motion starts. Use it to customize the drag behavior
+	 * `draginit_pp` is triggered when the drag motion starts. Use it to customize the drag behavior
 	 * using the [jQuery.Drag] instance passed as the second parameter:
 	 *
-	 *     $(".draggable").on('draginit', function(ev, drag) {
+	 *     $(".draggable").on('draginit_pp', function(ev, drag) {
 	 *       // Only allow vertical drags
 	 *       drag.vertical();
 	 *       // Create a draggable copy of the element
 	 *       drag.ghost();
 	 *     });
 	 */
-		'draginit',
+		'draginit_pp',
 	/**
-	 * @function jQuery.event.special.dragover dragover
+	 * @function jQuery.event.special.dragover dragover_pp
 	 * @parent jQuery.event.drag
 	 *
 	 * @body
@@ -691,20 +691,20 @@ steal('jquery', 'jquerypp/lang/vector', 'jquerypp/event/livehack', 'jquerypp/eve
 	 * The event handler gets an instance of [jQuery.Drag] passed as the second
 	 * parameter and an instance of [jQuery.Drop] passed as the third argument:
 	 *
-	 *      $('.draggable').on('dragover', function(ev, drag, drop) {
+	 *      $('.draggable').on('dragover_pp', function(ev, drag, drop) {
 	 *          // Add the drop-here class indicating that the drag
 	 *          // can be dropped here
 	 *          drag.element.addClass('drop-here');
 	 *      });
 	 */
-		'dragover',
+		'dragover_pp',
 	/**
-	 * @function jQuery.event.special.dragmove dragmove
+	 * @function jQuery.event.special.dragmove dragmove_pp
 	 * @parent jQuery.event.drag
 	 *
 	 * @body
 	 *
-	 * `dragmove` is triggered when the drag element moves (similar to a mousemove).
+	 * `dragmove_pp` is triggered when the drag element moves (similar to a mousemove).
 	 * The event handler gets an instance of [jQuery.Drag] passed as the second
 	 * parameter.
 	 * Use [jQuery.Drag.prototype.location location] to determine the current position
@@ -713,32 +713,32 @@ steal('jquery', 'jquerypp/lang/vector', 'jquerypp/event/livehack', 'jquerypp/eve
 	 * For example, `dragmove` can be used to create a draggable element to resize
 	 * a container:
 	 *
-	 *      $('.resizer').on('dragmove', function(ev, drag) {
+	 *      $('.resizer').on('dragmove_pp', function(ev, drag) {
 	 *          $('#container').width(drag.location.x())
 	 *              .height(drag.location.y());
 	 *      });
 	 */
-		'dragmove',
+		'dragmove_pp',
 	/**
-	 * @function jQuery.event.special.dragout dragout
+	 * @function jQuery.event.special.dragout dragout_pp
 	 * @parent jQuery.event.drag
 	 *
 	 * @body
 	 *
-	 * `dragout` is called when the drag leaves a drop point.
+	 * `dragout_pp` is called when the drag leaves a drop point.
 	 * The event handler gets an instance of [jQuery.Drag] passed as the second
 	 * parameter.
 	 *
-	 *      $('.draggable').on('dragout', function(ev, drag) {
+	 *      $('.draggable').on('dragout_pp', function(ev, drag) {
 	 *      	 // Remove the drop-here class
 	 *      	 // (e.g. crossing the drag element out indicating that it
 	 *      	 // can't be dropped here
 	 *          drag.element.removeClass('drop-here');
 	 *      });
 	 */
-		'dragout',
+		'dragout_pp',
 	/**
-	 * @function jQuery.event.special.dragend dragend
+	 * @function jQuery.event.special.dragend dragend_pp
 	 * @parent jQuery.event.drag
 	 *
 	 * @body
@@ -747,13 +747,13 @@ steal('jquery', 'jquerypp/lang/vector', 'jquerypp/event/livehack', 'jquerypp/eve
 	 * The event handler gets an instance of [jQuery.Drag] passed as the second
 	 * parameter.
 	 *
-	 *     $('.draggable').on('dragend', function(ev, drag)
+	 *     $('.draggable').on('dragend_pp', function(ev, drag)
 	 *       // Calculation on whether revert should be invoked, alterations based on position of the end event
 	 *     });
 	 */
-		'dragend',
+		'dragend_pp',
 	/**
-	 * @function jQuery.event.special.dragcleanup dragcleanup
+	 * @function jQuery.event.special.dragcleanup dragcleanup_pp
 	 * @parent jQuery.event.drag
 	 *
 	 * @body
@@ -762,11 +762,11 @@ steal('jquery', 'jquerypp/lang/vector', 'jquerypp/event/livehack', 'jquerypp/eve
 	 * The event handler gets an instance of [jQuery.Drag] passed as the second
 	 * parameter.
 	 *
-	 *     $('.draggable').on('dragcleanup', function(ev, drag)
+	 *     $('.draggable').on('dragcleanup_pp', function(ev, drag)
 	 *         // cleanup
 	 *     });
 	 */
-		'dragcleanup'], startEvent, function( e ) {
+		'dragcleanup_pp'], startEvent, function( e ) {
 		$.Drag.mousedown.call($.Drag, e, this);
 	});
 

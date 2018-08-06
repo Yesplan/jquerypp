@@ -16,7 +16,7 @@ steal('jquery', 'jquerypp/event/drag/core', function( $ ) {
 	 * @body
 	 * `drag.limit(container, [center])` limits a drag to a containing element.
 	 *
-	 *     $("#todos").on(".todo","draginit", function( ev, drag ) {
+	 *     $("#todos").on(".todo","draginit_pp", function( ev, drag ) {
 	 *       drag.limit($("#todos").parent())
 	 *     })
 	 *

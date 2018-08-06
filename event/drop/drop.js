@@ -5,7 +5,7 @@ steal('jquery', 'jquerypp/event/drag/core', 'jquerypp/dom/within', 'jquerypp/dom
 	 */
 	var eventNames = [
 	/**
-	 * @function jQuery.event.special.dropover dropover
+	 * @function jQuery.event.special.dropover dropover_pp
 	 * @parent jQuery.event.drop
 	 *
 	 * @body
@@ -16,13 +16,13 @@ steal('jquery', 'jquerypp/event/drag/core', 'jquerypp/dom/within', 'jquerypp/dom
 	 * [jQuery.Drop] as the third parameter.
 	 * This event can be used to highlight the element when a drag is moved over it:
 	 *
-	 *      $('.droparea').on('dropover', function(ev, drop, drag) {
+	 *      $('.droparea').on('dropover_pp', function(ev, drop, drag) {
 	 *          $(this).addClass('highlight');
 	 *      });
 	 */
-	"dropover",
+	"dropover_pp",
 	/**
-	 * @function jQuery.event.special.dropon dropon
+	 * @function jQuery.event.special.dropon dropon_pp
 	 * @parent jQuery.event.drop
 	 *
 	 * @body
@@ -31,13 +31,13 @@ steal('jquery', 'jquerypp/event/drag/core', 'jquerypp/dom/within', 'jquerypp/dom
 	 * The event handler gets an instance of [jQuery.Drag] passed as the second and a
 	 * [jQuery.Drop] as the third parameter.
 	 *
-	 *      $('.droparea').on('dropon', function(ev, drop, drag) {
+	 *      $('.droparea').on('dropon_pp', function(ev, drop, drag) {
 	 *          $(this).html('Dropped: ' + drag.element.text());
 	 *      });
 	 */
-	"dropon",
+	"dropon_pp",
 	/**
-	 * @function jQuery.event.special.dropout dropout
+	 * @function jQuery.event.special.dropout dropout_pp
 	 * @parent jQuery.event.drop
 	 *
 	 * @body
@@ -46,14 +46,14 @@ steal('jquery', 'jquerypp/event/drag/core', 'jquerypp/dom/within', 'jquerypp/dom
 	 * The event handler gets an instance of [jQuery.Drag] passed as the second and a
 	 * [jQuery.Drop] as the third parameter.
 	 *
-	 *      $('.droparea').on('dropover', function(ev, drop, drag) {
+	 *      $('.droparea').on('dropover_pp', function(ev, drop, drag) {
 	 *          // Remove the drop element highlight
 	 *          $(this).removeClass('highlight');
 	 *      });
 	 */
-	"dropout",
+	"dropout_pp",
 	/**
-	 * @function jQuery.event.special.dropinit dropinit
+	 * @function jQuery.event.special.dropinit dropinit_pp
 	 * @parent jQuery.event.drop
 	 *
 	 * @body
@@ -64,15 +64,15 @@ steal('jquery', 'jquerypp/event/drag/core', 'jquerypp/dom/within', 'jquerypp/dom
 	 * Calling [jQuery.Drop.prototype.cancel drop.cancel()] prevents the element from
 	 * being dropped on:
 	 *
-	 *      $('.droparea').on('dropover', function(ev, drop, drag) {
+	 *      $('.droparea').on('dropover_pp', function(ev, drop, drag) {
 	 *          if(drag.element.hasClass('not-me')) {
 	 *            drop.cancel();
 	 *          }
 	 *      });
 	 */
-	"dropinit",
+	"dropinit_pp",
 	/**
-	 * @function jQuery.event.special.dropmove dropmove
+	 * @function jQuery.event.special.dropmove dropmove_pp
 	 * @parent jQuery.event.drop
 	 *
 	 * @body
@@ -82,13 +82,13 @@ steal('jquery', 'jquerypp/event/drag/core', 'jquerypp/dom/within', 'jquerypp/dom
 	 * The event handler gets an instance of [jQuery.Drag] passed as the second and a
 	 * [jQuery.Drop] as the third parameter.
 	 *
-	 *      $('.droparea').on('dropmove', function(ev, drop, drag) {
+	 *      $('.droparea').on('dropmove_pp', function(ev, drop, drag) {
 	 *          $(this).html(drag.location.x() + '/' + drag.location.y());
 	 *      });
 	 */
-	"dropmove",
+	"dropmove_pp",
 	/**
-	 * @function jQuery.event.special.dropend dropend
+	 * @function jQuery.event.special.dropend dropend_pp
 	 * @parent jQuery.event.drop
 	 *
 	 * @body
@@ -98,12 +98,12 @@ steal('jquery', 'jquerypp/event/drag/core', 'jquerypp/dom/within', 'jquerypp/dom
 	 * [jQuery.Drop] as the third parameter.
 	 *
 	 *
-	 *      $('.droparea').on('dropend', function(ev, drop, drag) {
+	 *      $('.droparea').on('dropend_pp', function(ev, drop, drag) {
 	 *          // Remove the drop element highlight
 	 *          $(this).removeClass('highlight');
 	 *      });
 	 */
-	"dropend"];
+	"dropend_pp"];
 	
 	/**
 	 * @constructor jQuery.Drop
@@ -116,7 +116,7 @@ steal('jquery', 'jquerypp/event/drag/core', 'jquerypp/dom/within', 'jquerypp/dom
 	 * to the `dropinit`, `dropover`, `dropmove`, `dropon`, and `dropend` event handlers as the
 	 * third argument (the second will be the [jQuery.Drag]):
 	 *
-	 *      $('#dropper').on('dropover', function(el, drop, drag) {
+	 *      $('#dropper').on('dropover_pp', function(el, drop, drag) {
 	 *          // drop -> $.Drop
 	 *          // drag -> $.Drag
 	 *      });
@@ -154,7 +154,7 @@ steal('jquery', 'jquerypp/event/drag/core', 'jquerypp/dom/within', 'jquerypp/dom
 		_rootElements: [], //elements that are listening for drops
 		_elements: $(),    //elements that can be dropped on
 		last_active: [],
-		endName: "dropon",
+		endName: "dropon_pp",
 		// adds an element as a 'root' element
 		// this element might have events that we need to respond to
 		addElement: function( el ) {
@@ -199,7 +199,7 @@ steal('jquery', 'jquerypp/event/drag/core', 'jquerypp/dom/within', 'jquerypp/dom
 		 */
 		deactivate: function( responder, mover, event ) {
 			mover.out(event, responder)
-			responder.callHandlers(this.lowerName+'out',responder.element[0], event, mover)
+			responder.callHandlers(this.lowerName+'out_pp',responder.element[0], event, mover)
 		}, 
 		/**
 		 * @hide
@@ -210,10 +210,10 @@ steal('jquery', 'jquerypp/event/drag/core', 'jquerypp/dom/within', 'jquerypp/dom
 		 */
 		activate: function( responder, mover, event ) { //this is where we should call over
 			mover.over(event, responder)
-			responder.callHandlers(this.lowerName+'over',responder.element[0], event, mover);
+			responder.callHandlers(this.lowerName+'over_pp',responder.element[0], event, mover);
 		},
 		move: function( responder, mover, event ) {
-			responder.callHandlers(this.lowerName+'move',responder.element[0], event, mover)
+			responder.callHandlers(this.lowerName+'move_pp',responder.element[0], event, mover)
 		},
 		/**
 		 * `jQuery.Drop.compile()` gets all elements that are droppable and adds them to a list.
@@ -227,10 +227,10 @@ steal('jquery', 'jquerypp/event/drag/core', 'jquerypp/dom/within', 'jquerypp/dom
 		 * 
 		 * After adding an element or drop, call compile.
 		 * 
-		 *      $("#midpoint").bind("dropover",function(){
+		 *      $("#midpoint").bind("dropover_pp",function(){
 		 * 		    // when a drop hovers over midpoint,
 		 *          // make drop a drop.
-		 * 		    $("#drop").bind("dropover", function(){
+		 * 		    $("#drop").bind("dropover_pp", function(){
 		 * 			
 		 * 		    });
 		 * 		    $.Drop.compile();
@@ -255,7 +255,7 @@ steal('jquery', 'jquerypp/event/drag/core', 'jquerypp/dom/within', 'jquerypp/dom
 			for(var i=0; i < this._rootElements.length; i++){ //for each element
 				el = this._rootElements[i]
 				
-				// gets something like {"": ["dropinit"], ".foo" : ["dropover","dropmove"] }
+				// gets something like {"": ["dropinit_pp"], ".foo" : ["dropover_pp","dropmove_pp"] }
 				var drops = $.event.findBySelector(el, eventNames)
 
 				// get drop elements by selector
@@ -305,7 +305,7 @@ steal('jquery', 'jquerypp/event/drag/core', 'jquerypp/dom/within', 'jquerypp/dom
 			
 			while(i < newEls.length){
 				drop = $.data(newEls[i],"_dropData");
-				drop.callHandlers(this.lowerName+'init', newEls[i], event, drag)
+				drop.callHandlers(this.lowerName+'init_pp', newEls[i], event, drag)
 				if(drop._canceled){
 					newEls.splice(i,1)
 				}else{
@@ -387,7 +387,7 @@ steal('jquery', 'jquerypp/event/drag/core', 'jquerypp/dom/within', 'jquerypp/dom
 		},
 		end: function( event, moveable ) {
 			var la, 
-			    endName = this.lowerName+'end',
+			    endName = this.lowerName+'end_pp',
                             onEvent = $.Event(this.endName, event),
 			    dropData;
 			
@@ -452,7 +452,7 @@ steal('jquery', 'jquerypp/event/drag/core', 'jquerypp/dom/within', 'jquerypp/dom
 		/**
 		 * `drop.cancel()` prevents this drop from being dropped on.
 		 *
-		 *      $('.droparea').on('dropover', function(ev, drop, drag) {
+		 *      $('.droparea').on('dropover_pp', function(ev, drop, drag) {
 		 *          if(drag.element.hasClass('not-me')) {
 		 *            drop.cancel();
 		 *          }
